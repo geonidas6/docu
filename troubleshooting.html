@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Troubleshooting | VPS Docs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        code,
+        pre {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item-active {
+            border-left: 2px solid #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-950 text-slate-200">
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 fixed inset-y-0 border-r border-slate-800 bg-slate-950 px-4 py-8 hidden md:block">
+            <div class="mb-10 px-4">
+                <span
+                    class="text-xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">OPS_DOCS</span>
+            </div>
+            <nav class="space-y-1">
+                <a href="index.html"
+                    class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-colors">
+                    Introduction
+                </a>
+                <a href="vps.html"
+                    class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-colors">
+                    1. Préparation VPS
+                </a>
+                <a href="docker.html"
+                    class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-colors">
+                    2. Docker & Dockge
+                </a>
+                <a href="tunnel.html"
+                    class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-colors">
+                    3. Cloudflare Tunnel
+                </a>
+                <a href="wordpress.html"
+                    class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-colors">
+                    4. WordPress Stack
+                </a>
+                <a href="troubleshooting.html"
+                    class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg nav-item-active font-bold">
+                    5. Dépannage
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 md:ml-64 px-6 py-12 lg:px-12">
+            <div class="max-w-3xl mx-auto">
+                <header class="mb-16">
+                    <h1 class="text-4xl font-extrabold text-white mb-6">Étape 6 : Dépannage & Débogage</h1>
+                    <p class="text-lg text-slate-400 leading-relaxed">
+                        Même les meilleures configurations rencontrent des obstacles. Voici comment inspecter,
+                        diagnostiquer et résoudre les erreurs.
+                    </p>
+                </header>
+
+                <section class="space-y-12 mb-16">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-4">Maîtriser les Logs</h2>
+                        <p class="mb-4 text-slate-400 leading-relaxed">
+                            Les logs sont votre premier outil de diagnostic. Visualisez ce qui se passe à l'intérieur de
+                            vos containers en temps réel.
+                        </p>
+                        <pre class="bg-slate-900 p-6 rounded-xl border border-slate-800 text-sm overflow-x-auto"><code># Voir les dernières lignes
+docker logs --tail 50 container_name
+
+# Suivre en direct (Live feedback)
+docker logs -f container_name
+
+# Avec Docker Compose (tous les services de la stack)
+docker compose logs -f --tail 20</code></pre>
+                    </div>
+
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-4">Déboguer en Développement</h2>
+                        <p class="mb-4 text-slate-400 leading-relaxed">
+                            Si un service ne démarre pas ou se comporte mal, inspectez son environnement et sa structure
+                            interne.
+                        </p>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="p-4 rounded-xl bg-slate-900 border border-slate-800">
+                                <h4 class="text-white font-bold mb-1 text-sm">Entrer dans le container</h4>
+                                <code class="text-xs text-indigo-400">docker exec -it name bash</code>
+                            </div>
+                            <div class="p-4 rounded-xl bg-slate-900 border border-slate-800">
+                                <h4 class="text-white font-bold mb-1 text-sm">Vérifier les variables d'env</h4>
+                                <code class="text-xs text-indigo-400">docker inspect name | grep Env</code>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="space-y-8">
+                    <!-- Issue 1 -->
+                    <div class="p-6 rounded-2xl bg-slate-900/50 border border-slate-800">
+                        <h3 class="text-red-400 font-bold text-xl mb-3">Permission Denied (Docker Volumes)</h3>
+                        <p class="text-slate-400 mb-4 leading-relaxed">
+                            Si vos containers ne peuvent pas écrire dans les dossiers montés (ex: `wp-content`), c'est
+                            souvent un problème de permissions sur l'hôte.
+                        </p>
+                        <pre class="bg-slate-950 p-3 rounded border border-slate-800 text-sm"><code># Appliquer récursivement à www-data (UID 33)
+sudo chown -R 33:33 /opt/stacks/wordpress/wp-content</code></pre>
+                    </div>
+
+                    <!-- Issue 2 -->
+                    <div class="p-6 rounded-2xl bg-slate-900/50 border border-slate-800">
+                        <h3 class="text-red-400 font-bold text-xl mb-3">Boucles de redirection HTTPS</h3>
+                        <p class="text-slate-400 mb-4 leading-relaxed">
+                            WordPress peut se perdre s'il ne sait pas que Cloudflare gère le SSL. Ajoutez ceci en haut
+                            de votre `wp-config.php`.
+                        </p>
+                        <pre class="bg-slate-950 p-4 rounded border border-slate-800 text-sm text-indigo-300"><code>if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
+    $_SERVER['HTTPS'] = 'on';
+}</code></pre>
+                    </div>
+
+                    <!-- Issue 3 -->
+                    <div class="p-6 rounded-2xl bg-slate-900/50 border border-slate-800">
+                        <h3 class="text-red-400 font-bold text-xl mb-3">Le tunnel ne se connecte pas</h3>
+                        <ul class="list-disc list-inside text-slate-400 space-y-2">
+                            <li>Vérifiez les logs : <code
+                                    class="bg-slate-800 px-1 rounded">docker logs cloudflared-tunnel</code></li>
+                            <li>Assurez-vous que le **Token** est correct.</li>
+                            <li>Vérifiez la connexion internet du VPS.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <footer class="mt-24 pt-8 border-t border-slate-800 flex justify-between items-center text-sm">
+                    <a href="wordpress.html"
+                        class="flex items-center gap-2 text-slate-400 hover:text-white font-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                        Précédent : WordPress
+                    </a>
+                    <span class="text-slate-600 italic italic">Fin du guide</span>
+                </footer>
+            </div>
+        </main>
+    </div>
+
+</body>
+
+</html>

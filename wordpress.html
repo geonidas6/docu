@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordPress Deployment | VPS Docs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        code,
+        pre {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item-active {
+            border-left: 2px solid #818cf8;
+            background: rgba(129, 140, 248, 0.1);
+            color: #818cf8;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-950 text-slate-200">
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 fixed inset-y-0 border-r border-slate-800 bg-slate-950 px-4 py-8 hidden md:block">
+            <div class="mb-10 px-4">
+                <span
+                    class="text-xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">OPS_DOCS</span>
+            </div>
+            <nav class="space-y-1">
+                <a href="index.html"
+                    class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-colors">
+                    Introduction
+                </a>
+                <a href="vps.html"
+                    class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-colors">
+                    1. Préparation VPS
+                </a>
+                <a href="docker.html"
+                    class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-colors">
+                    2. Docker & Dockge
+                </a>
+                <a href="tunnel.html"
+                    class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-colors">
+                    3. Cloudflare Tunnel
+                </a>
+                <a href="wordpress.html"
+                    class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg nav-item-active">
+                    4. WordPress Stack
+                </a>
+                <a href="troubleshooting.html"
+                    class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-colors text-red-400/70 hover:text-red-400">
+                    5. Dépannage
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 md:ml-64 px-6 py-12 lg:px-12">
+            <div class="max-w-3xl mx-auto">
+                <header class="mb-16">
+                    <h1 class="text-4xl font-extrabold text-white mb-6">Étape 4 : Déploiement WordPress</h1>
+                    <p class="text-lg text-slate-400 leading-relaxed">
+                        Mise en pratique : déploier WordPress avec MariaDB et liez le tout à votre tunnel.
+                    </p>
+                </header>
+
+                <section class="space-y-12">
+                    <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
+                        <h4 class="text-xs font-bold text-slate-500 uppercase mb-4 tracking-widest">Stack WordPress
+                            (Compose)</h4>
+                        <pre
+                            class="bg-slate-950 p-4 rounded-xl text-sm overflow-x-auto text-indigo-100 border border-slate-850"><code>services:
+  db:
+    image: mariadb:10.6
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=un_mot_de_passe_fort
+      - MYSQL_DATABASE=wordpress
+      - MYSQL_USER=wp_user
+      - MYSQL_PASSWORD=wp_password
+
+  wordpress:
+    image: wordpress:latest
+    depends_on:
+      - db
+    environment:
+      - WORDPRESS_DB_HOST=db
+      - WORDPRESS_DB_USER=wp_user
+      - WORDPRESS_DB_NAME=wordpress
+      - WORDPRESS_DB_PASSWORD=wp_password
+    networks:
+      - default
+      - cloudflare-nw
+
+networks:
+  cloudflare-nw:
+    external: true
+
+volumes:
+  db_data:</code></pre>
+                    </div>
+
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-4">Liaison DNS / Tunnel</h2>
+                        <ol class="space-y-4 text-slate-400 list-decimal list-inside">
+                            <li>Allez dans <span class="text-indigo-400 underline italic">Cloudflare Zero Trust
+                                    Dashboard</span>.</li>
+                            <li>Sélectionnez votre tunnel -> <span class="text-white font-medium">Public
+                                    Hostname</span>.</li>
+                            <li>Ajoutez un Hostname (ex: blog.mondomaine.com).</li>
+                            <li>Service Type: <span class="text-white">HTTP</span>.</li>
+                            <li>URL: <span class="bg-slate-800 px-2 rounded text-indigo-300">wordpress:80</span>
+                                (Utilisez le nom du service Docker).</li>
+                        </ol>
+                    </div>
+                </section>
+
+                <footer class="mt-24 pt-8 border-t border-slate-800 flex justify-between items-center text-sm">
+                    <a href="tunnel.html" class="flex items-center gap-2 text-slate-400 hover:text-white font-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                        Précédent : Tunnel CF
+                    </a>
+                    <a href="troubleshooting.html"
+                        class="flex items-center gap-2 text-indigo-400 hover:text-indigo-300 font-medium">
+                        Suivant : Dépannage
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                </footer>
+            </div>
+        </main>
+    </div>
+
+</body>
+
+</html>

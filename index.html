@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intro & Architecture | VPS Docs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        code,
+        pre {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-item-active {
+            border-left: 2px solid #818cf8;
+            background: rgba(129, 140, 248, 0.1);
+            color: #818cf8;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-950 text-slate-200">
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 fixed inset-y-0 border-r border-slate-800 bg-slate-950 px-4 py-8 hidden md:block">
+            <div class="mb-10 px-4">
+                <span class="text-xl font-bold gradient-text">OPS_DOCS</span>
+            </div>
+            <nav class="space-y-1">
+                <a href="index.html"
+                    class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg nav-item-active">
+                    Introduction
+                </a>
+                <a href="vps.html"
+                    class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-colors">
+                    1. Préparation VPS
+                </a>
+                <a href="docker.html"
+                    class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-colors">
+                    2. Docker & Dockge
+                </a>
+                <a href="tunnel.html"
+                    class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-colors">
+                    3. Cloudflare Tunnel
+                </a>
+                <a href="wordpress.html"
+                    class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-colors">
+                    4. WordPress Stack
+                </a>
+                <a href="troubleshooting.html"
+                    class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-colors text-red-400/70 hover:text-red-400">
+                    5. Dépannage
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 md:ml-64 px-6 py-12 lg:px-12">
+            <div class="max-w-3xl mx-auto">
+                <header class="mb-16">
+                    <h1 class="text-4xl font-extrabold text-white mb-6">Introduction & Architecture</h1>
+                    <p class="text-lg text-slate-400 leading-relaxed">
+                        Bienvenue dans ce guide complet. Nous allons construire ensemble une infrastructure moderne,
+                        sécurisée et automatisée sur un VPS Ubuntu.
+                    </p>
+                </header>
+
+                <section class="space-y-12">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-6">Concept Global</h2>
+                        <p class="mb-6 leading-relaxed">
+                            L'objectif est d'utiliser **Docker** pour isoler nos services, **Dockge** pour les gérer
+                            visuellement, et **Cloudflare Tunnel** pour les exposer de manière sécurisée sans ouvrir de
+                            ports sur le pare-feu du VPS.
+                        </p>
+
+                        <div class="glass p-8 rounded-2xl border border-slate-800">
+                            <h3 class="text-indigo-400 font-semibold mb-4 uppercase tracking-wider text-sm italic">
+                                Schéma Réseau</h3>
+                            <pre class="text-indigo-300 text-sm overflow-x-auto">
+[ Internaute ] <---> [ Cloudflare Edge ]
+                           |
+                   ( Tunnel Chiffré )
+                           |
+                  [ Connecteur Docker ] --- (Réseau Interne)
+                                                  |
+                                          [ WordPress Service ]
+                                                  |
+                                          [ Dockge Manager ]</pre>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="p-6 rounded-xl bg-slate-900 border border-slate-800">
+                            <h4 class="text-white font-bold mb-2">Sécurité</h4>
+                            <p class="text-sm text-slate-400">Aucun port ouvert (Zéro-Trust). HTTPS géré nativement.</p>
+                        </div>
+                        <div class="p-6 rounded-xl bg-slate-900 border border-slate-800">
+                            <h4 class="text-white font-bold mb-2">Flexibilité</h4>
+                            <p class="text-sm text-slate-400">Déploiement en un clic avec Docker Compose & Dockge.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <footer class="mt-24 pt-8 border-t border-slate-800 flex justify-between items-center text-sm">
+                    <span class="text-slate-500">OPS_DOCS v1.0</span>
+                    <a href="vps.html"
+                        class="flex items-center gap-2 text-indigo-400 hover:text-indigo-300 font-medium">
+                        Suivant : Préparation VPS
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                </footer>
+            </div>
+        </main>
+    </div>
+
+</body>
+
+</html>

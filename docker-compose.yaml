@@ -1,0 +1,13 @@
+services:
+  docs-site:
+    image: nginx:alpine
+    container_name: vps-docs-site
+    restart: always
+    volumes:
+      - .:/usr/share/nginx/html:ro
+    networks:
+      - web-public
+
+networks:
+  web-public:
+    external: true

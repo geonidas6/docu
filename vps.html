@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Préparation VPS | VPS Docs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        code,
+        pre {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item-active {
+            border-left: 2px solid #818cf8;
+            background: rgba(129, 140, 248, 0.1);
+            color: #818cf8;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-950 text-slate-200">
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 fixed inset-y-0 border-r border-slate-800 bg-slate-950 px-4 py-8 hidden md:block">
+            <div class="mb-10 px-4">
+                <span
+                    class="text-xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">OPS_DOCS</span>
+            </div>
+            <nav class="space-y-1">
+                <a href="index.html"
+                    class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-colors">
+                    Introduction
+                </a>
+                <a href="vps.html" class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg nav-item-active">
+                    1. Préparation VPS
+                </a>
+                <a href="docker.html"
+                    class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-colors">
+                    2. Docker & Dockge
+                </a>
+                <a href="tunnel.html"
+                    class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-colors">
+                    3. Cloudflare Tunnel
+                </a>
+                <a href="wordpress.html"
+                    class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-colors">
+                    4. WordPress Stack
+                </a>
+                <a href="troubleshooting.html"
+                    class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-colors text-red-400/70 hover:text-red-400">
+                    5. Dépannage
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 md:ml-64 px-6 py-12 lg:px-12">
+            <div class="max-w-3xl mx-auto">
+                <header class="mb-16">
+                    <h1 class="text-4xl font-extrabold text-white mb-6">Étape 1 : Préparation du VPS</h1>
+                    <p class="text-lg text-slate-400 leading-relaxed">
+                        Un serveur bien préparé est la base d'une infrastructure stable. Nous allons mettre à jour le
+                        système et configurer l'accès SSH.
+                    </p>
+                </header>
+
+                <section class="space-y-12">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-4">Mise à jour et paquets de base</h2>
+                        <pre class="bg-slate-900 p-6 rounded-xl border border-slate-800 text-sm overflow-x-auto mb-4"><code>sudo apt update && sudo apt upgrade -y
+sudo apt install curl wget git software-properties-common -y</code></pre>
+                    </div>
+
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-4">SSH KeepAlive</h2>
+                        <p class="mb-4 text-slate-400 text-sm italic">Évite les déconnexions intempestives lors de
+                            longues sessions de travail.</p>
+                        <pre class="bg-slate-900 p-6 rounded-xl border border-slate-800 text-sm overflow-x-auto"><code># Éditez votre fichier de config local ou serveur
+sudo nano /etc/ssh/ssh_config
+
+# Ajoutez ces lignes :
+ServerAliveInterval 60
+ServerAliveCountMax 2</code></pre>
+                    </div>
+
+                    <div class="p-6 rounded-xl bg-indigo-900/10 border border-indigo-500/30">
+                        <h4 class="text-indigo-400 font-bold mb-2 flex items-center gap-2">
+                            🛡️ Sécurité (Pro-tip)
+                        </h4>
+                        <p class="text-sm text-slate-300">
+                            Créez toujours un utilisateur non-root avec des privilèges sudo :<br><br>
+                            <code class="text-indigo-200">adduser dev && usermod -aG sudo dev</code>
+                        </p>
+                    </div>
+                </section>
+
+                <footer class="mt-24 pt-8 border-t border-slate-800 flex justify-between items-center text-sm">
+                    <a href="index.html" class="flex items-center gap-2 text-slate-400 hover:text-white font-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                        Précédent : Intro
+                    </a>
+                    <a href="docker.html"
+                        class="flex items-center gap-2 text-indigo-400 hover:text-indigo-300 font-medium">
+                        Suivant : Docker & Dockge
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                </footer>
+            </div>
+        </main>
+    </div>
+
+</body>
+
+</html>
