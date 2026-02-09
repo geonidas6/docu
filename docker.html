@@ -35,9 +35,23 @@
 
 <body class="bg-slate-950 text-slate-200">
 
+    <!-- Mobile Header -->
+    <div
+        class="md:hidden flex items-center justify-between p-4 border-b border-slate-800 bg-slate-950 sticky top-0 z-40">
+        <span
+            class="text-xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">OPS_DOCS</span>
+        <button id="mobile-menu-btn" class="text-slate-400 hover:text-white focus:outline-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+        </button>
+    </div>
+
     <div class="flex min-h-screen">
         <!-- Sidebar -->
-        <aside class="w-64 fixed inset-y-0 border-r border-slate-800 bg-slate-950 px-4 py-8 hidden md:block">
+        <aside id="sidebar"
+            class="fixed inset-y-0 left-0 z-50 w-64 bg-slate-950 border-r border-slate-800 px-4 py-8 transition-transform duration-300 -translate-x-full md:translate-x-0 md:block">
             <div class="mb-10 px-4">
                 <span
                     class="text-xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">OPS_DOCS</span>
@@ -69,6 +83,10 @@
                 </a>
             </nav>
         </aside>
+
+        <!-- Backdrop -->
+        <div id="backdrop"
+            class="fixed inset-0 bg-slate-900/80 z-40 hidden md:hidden backdrop-blur-sm transition-opacity"></div>
 
         <!-- Main Content -->
         <main class="flex-1 md:ml-64 px-6 py-12 lg:px-12">
@@ -158,6 +176,22 @@ docker compose up -d</code></pre>
         </main>
     </div>
 
+    <script>
+        const btn = document.getElementById('mobile-menu-btn');
+        const sidebar = document.getElementById('sidebar');
+        const backdrop = document.getElementById('backdrop');
+
+        // Function to toggle menu
+        function toggleMenu() {
+            // Toggle translate-x
+            sidebar.classList.toggle('-translate-x-full');
+            // Toggle backdrop visibility
+            backdrop.classList.toggle('hidden');
+        }
+
+        btn.addEventListener('click', toggleMenu);
+        backdrop.addEventListener('click', toggleMenu);
+    </script>
 </body>
 
 </html>

@@ -35,9 +35,23 @@
 
 <body class="bg-slate-950 text-slate-200">
 
+    <!-- Mobile Header -->
+    <div
+        class="md:hidden flex items-center justify-between p-4 border-b border-slate-800 bg-slate-950 sticky top-0 z-40">
+        <span
+            class="text-xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">OPS_DOCS</span>
+        <button id="mobile-menu-btn" class="text-slate-400 hover:text-white focus:outline-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+        </button>
+    </div>
+
     <div class="flex min-h-screen">
         <!-- Sidebar -->
-        <aside class="w-64 fixed inset-y-0 border-r border-slate-800 bg-slate-950 px-4 py-8 hidden md:block">
+        <aside id="sidebar"
+            class="fixed inset-y-0 left-0 z-50 w-64 bg-slate-950 border-r border-slate-800 px-4 py-8 transition-transform duration-300 -translate-x-full md:translate-x-0 md:block">
             <div class="mb-10 px-4">
                 <span
                     class="text-xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">OPS_DOCS</span>
@@ -74,13 +88,18 @@
             </nav>
         </aside>
 
+        <!-- Backdrop -->
+        <div id="backdrop"
+            class="fixed inset-0 bg-slate-900/80 z-40 hidden md:hidden backdrop-blur-sm transition-opacity"></div>
+
         <!-- Main Content -->
         <main class="flex-1 md:ml-64 px-6 py-12 lg:px-12">
             <div class="max-w-3xl mx-auto">
                 <header class="mb-16">
                     <h1 class="text-4xl font-extrabold text-white mb-6">Étape 5 : Gestion des Données & Persistance</h1>
                     <p class="text-lg text-slate-400 leading-relaxed">
-                        Apprenez à manipuler vos données, à comprendre les volumes et à préparer vos backups pour une migration sans douleur.
+                        Apprenez à manipuler vos données, à comprendre les volumes et à préparer vos backups pour une
+                        migration sans douleur.
                     </p>
                 </header>
 
@@ -88,13 +107,18 @@
                     <div>
                         <h2 class="text-2xl font-bold text-white mb-4">Le concept de Volumes</h2>
                         <p class="mb-4 text-slate-400 leading-relaxed">
-                            Dans Docker, un container est éphémère. Si vous le supprimez, vous perdez tout ce qu'il contient. 
-                            Les <strong>Volumes</strong> (ou bind mounts) permettent de lier un dossier du VPS à un dossier dans le container.
+                            Dans Docker, un container est éphémère. Si vous le supprimez, vous perdez tout ce qu'il
+                            contient.
+                            Les <strong>Volumes</strong> (ou bind mounts) permettent de lier un dossier du VPS à un
+                            dossier dans le container.
                         </p>
                         <div class="p-6 rounded-xl bg-emerald-900/10 border border-emerald-500/30 mb-6">
-                            <h4 class="text-emerald-400 font-bold mb-2">🚀 Pourquoi c'est crucial pour la migration ?</h4>
+                            <h4 class="text-emerald-400 font-bold mb-2">🚀 Pourquoi c'est crucial pour la migration ?
+                            </h4>
                             <p class="text-sm text-slate-300">
-                                En centralisant toutes vos données dans <code>/opt/stacks</code>, il vous suffit de copier ce dossier sur un nouveau VPS pour restaurer l'intégralité de vos sites. C'est la base d'une stratégie de backup solide.
+                                En centralisant toutes vos données dans <code>/opt/stacks</code>, il vous suffit de
+                                copier ce dossier sur un nouveau VPS pour restaurer l'intégralité de vos sites. C'est la
+                                base d'une stratégie de backup solide.
                             </p>
                         </div>
                     </div>
@@ -116,7 +140,8 @@ docker cp ./config.php container_name:/var/www/html/</code></pre>
                         <p class="mb-4 text-slate-400 leading-relaxed">
                             Pour sauvegarder votre base de données WordPress sans utiliser d'extension :
                         </p>
-                        <pre class="bg-slate-900 p-6 rounded-xl border border-slate-800 text-sm overflow-x-auto text-indigo-100"><code># Créer un dump SQL
+                        <pre
+                            class="bg-slate-900 p-6 rounded-xl border border-slate-800 text-sm overflow-x-auto text-indigo-100"><code># Créer un dump SQL
 docker exec db_container_name mysqldump -u root -p'votre_pass' db_name > backup.sql
 
 # Importer un dump SQL
@@ -125,7 +150,8 @@ docker exec -i db_container_name mysql -u root -p'votre_pass' db_name < backup.s
                 </section>
 
                 <footer class="mt-24 pt-8 border-t border-slate-800 flex justify-between items-center text-sm">
-                    <a href="wordpress.html" class="flex items-center gap-2 text-slate-400 hover:text-white font-medium">
+                    <a href="wordpress.html"
+                        class="flex items-center gap-2 text-slate-400 hover:text-white font-medium">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -145,6 +171,22 @@ docker exec -i db_container_name mysql -u root -p'votre_pass' db_name < backup.s
         </main>
     </div>
 
+    <script>
+        const btn = document.getElementById('mobile-menu-btn');
+        const sidebar = document.getElementById('sidebar');
+        const backdrop = document.getElementById('backdrop');
+
+        // Function to toggle menu
+        function toggleMenu() {
+            // Toggle translate-x
+            sidebar.classList.toggle('-translate-x-full');
+            // Toggle backdrop visibility
+            backdrop.classList.toggle('hidden');
+        }
+
+        btn.addEventListener('click', toggleMenu);
+        backdrop.addEventListener('click', toggleMenu);
+    </script>
 </body>
 
 </html>
